@@ -1,0 +1,5 @@
+rootProject.name = 'microservices'
+
+include 'person'
+include 'location'
+include 'weather'
