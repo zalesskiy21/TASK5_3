@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 @Service
 public class LocationService {
 
@@ -22,9 +24,30 @@ public class LocationService {
     @Value("${url.weather.service}")
     private String weatherServiceUrl;
 
+    public List<Location> findAll() {
+        return repository.findAll();
+    }
+
     public Location findByName(String name) {
         return repository.findByName(name)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    public Location save(Location location) {
+        return repository.save(location);
+    }
+
+    public Location update(String name, Location location) {
+        Location existing = findByName(name);
+        existing.setLongitude(location.getLongitude());
+        existing.setLatitude(location.getLatitude());
+        existing.setName(location.getName());
+        return repository.save(existing);
+    }
+
+    public void delete(String name) {
+        Location existing = findByName(name);
+        repository.delete(existing);
     }
 
     public Weather getWeatherByLocationName(String name) {
